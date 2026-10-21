@@ -1,0 +1,38 @@
+name: Sync scores from ESPN
+
+on:
+  schedule:
+    # Tuesday and Wednesday at 12:00 UTC (8 AM Eastern in fall), after Monday Night Football
+    - cron: '0 12 * * 2'
+    - cron: '0 12 * * 3'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: site-data
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Pull league data from ESPN
+        env:
+          ESPN_S2: ${{ secrets.ESPN_S2 }}
+          ESPN_SWID: ${{ secrets.ESPN_SWID }}
+        run: python scripts/sync_espn.py
+      - name: Save if anything changed
+        run: |
+          git config user.name "league-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/espn-raw.json
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git commit -m "Sync ESPN scores"
+          git pull --rebase
+          git push
