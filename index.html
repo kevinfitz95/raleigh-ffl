@@ -19,6 +19,33 @@
 .rush-card p{margin:4px 0 0;color:var(--fg-2);font-size:15px;max-width:60ch}
 .rush-card .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;grid-column:2}
 .rush-card .chips span{font:600 12px/1 var(--cond);letter-spacing:.06em;text-transform:uppercase;padding:5px 8px;border-radius:3px;background:var(--panel-2);color:var(--fg)}
+
+.rush{position:relative;background:#14203d;border:1px solid #3a2f2a;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
+.rush .face{cursor:pointer;outline:none}
+.rush .face .stone-face{transition:filter .3s}
+.rush .face:hover .stone-face,.rush .face:focus-visible .stone-face{filter:url(#carve) drop-shadow(0 0 14px rgba(255,214,140,.9))}
+.plate-tx{font:900 30px "Big Shoulders Display",Impact,sans-serif;letter-spacing:.12em;fill:#4a3a30}
+.plate-sh{font:900 30px "Big Shoulders Display",Impact,sans-serif;letter-spacing:.12em;fill:#f6dcb2;opacity:.55}
+.plate-n{font:600 15px "Barlow Condensed","Arial Narrow",sans-serif;letter-spacing:.2em;fill:#5a473b;text-transform:uppercase}
+.rush .dust{fill:#e9d2ae;opacity:0}
+.rush-cap{position:absolute;left:0;right:0;top:0;padding:16px 20px;pointer-events:none;text-align:center}
+.rush-cap span{white-space:nowrap;font:900 clamp(12px,3.2vw,34px)/1 "Big Shoulders Display",Impact,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#ffe2a8;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+@media (prefers-reduced-motion:no-preference){
+  .rush.play .scene{animation:rush-zoom 7s cubic-bezier(.2,.7,.2,1) both;transform-origin:50% 60%}
+  .rush.play .sunglow{animation:rush-sun 3s ease-out both}
+  .rush.play .rays{animation:rush-rays 3s ease-out both}
+  .rush.play .face{animation:rush-carve 1.4s cubic-bezier(.2,.8,.2,1) var(--d) both}
+  .rush.play .plate{animation:rush-plate .9s ease-out calc(var(--d) + .9s) both}
+  .rush.play .dust{animation:rush-dust 1.3s ease-out calc(var(--d) + .1s) both}
+  .rush.play .rush-cap span{display:inline-block;animation:rush-plate 1s ease-out 1.9s both}
+}
+@keyframes rush-zoom{from{transform:scale(1.08)}to{transform:scale(1)}}
+@keyframes rush-sun{from{opacity:.2}to{opacity:1}}
+@keyframes rush-rays{from{opacity:0}to{opacity:.18}}
+@keyframes rush-carve{0%{opacity:0;filter:blur(8px)}60%{opacity:1;filter:blur(0)}100%{opacity:1}}
+@keyframes rush-plate{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes rush-dust{0%{opacity:0;transform:translate(0,0)}25%{opacity:.9}100%{opacity:0;transform:translate(var(--dx),var(--dy))}}
+@media (max-width:640px){.plate-tx,.plate-sh{font-size:36px}.plate-n{font-size:18px}.rush-cap{padding:9px 6px}.rush-cap span{letter-spacing:.08em}}
 </style>
 <title>Raleigh Fantasy Football League</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -328,27 +355,44 @@ code.snip{display:block;white-space:pre-wrap;word-break:break-all;background:var
 
 <section id="rushmore" data-tab="Mt. Rushmore" hidden>
   <div class="head"><div><div class="eyebrow">Body of work · 2023 to now</div><h2>Mount Rushmore</h2><p>The four managers carved into league history. Résumés count every game since 2023.</p></div></div>
-  <figure class="rush">
-    <svg viewBox="0 0 1200 640" role="img" aria-labelledby="rush-t" id="rush-svg">
+  <figure class="rush" id="rush-fig">
+    <svg viewBox="0 -70 1200 730" role="img" aria-labelledby="rush-t" id="rush-svg">
       <title id="rush-t">Mount Rushmore carved with Avioli, Dave, Erich and Jeremy</title>
       <defs>
-        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fb2e0"/><stop offset=".7" stop-color="#cfe3f2"/><stop offset="1" stop-color="#e9eef0"/></linearGradient>
-        <linearGradient id="rock" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfc8bd"/><stop offset=".55" stop-color="#b3aa9c"/><stop offset="1" stop-color="#8f8676"/></linearGradient>
-        <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" seed="4"/><feColorMatrix values="0 0 0 0 .35  0 0 0 0 .32  0 0 0 0 .28  0 0 0 .55 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
-        <filter id="cracks" x="0" y="0" width="100%" height="100%"><feTurbulence type="turbulence" baseFrequency=".012 .05" numOctaves="2" seed="11"/><feColorMatrix values="0 0 0 0 .25  0 0 0 0 .22  0 0 0 0 .18  0 0 0 -2.2 1.3"/><feComposite in2="SourceGraphic" operator="in"/></filter>
-        <filter id="stone" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncR type="linear" slope="1.15" intercept="-.04"/><feFuncG type="linear" slope="1.15" intercept="-.04"/><feFuncB type="linear" slope="1.15" intercept="-.04"/></feComponentTransfer><feColorMatrix values=".72 0 0 0 .2  0 .68 0 0 .19  0 0 .6 0 .17  0 0 0 1 0"/></filter>
-        <radialGradient id="fade"><stop offset=".4" stop-color="#fff"/><stop offset=".78" stop-color="#999"/><stop offset="1" stop-color="#000"/></radialGradient>
-        <path id="mtn" d="M0 640 L0 420 C60 380 90 300 150 250 C190 215 205 150 260 120 C300 98 350 120 380 90 C420 55 470 70 520 60 C580 48 620 80 660 95 C700 110 740 100 780 130 C830 165 860 150 900 175 C950 205 990 230 1020 280 C1060 340 1110 360 1200 400 L1200 640 Z"/>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14203d"/><stop offset=".38" stop-color="#3d4f86"/><stop offset=".66" stop-color="#d9785a"/><stop offset=".86" stop-color="#f6b46a"/><stop offset="1" stop-color="#ffd98f"/></linearGradient>
+        <radialGradient id="sun" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(600 300) scale(560 360)"><stop offset="0" stop-color="#fff2c4" stop-opacity=".95"/><stop offset=".35" stop-color="#ffc77a" stop-opacity=".55"/><stop offset="1" stop-color="#ff9a5a" stop-opacity="0"/></radialGradient>
+        <linearGradient id="rock" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e7c9a2"/><stop offset=".45" stop-color="#b79c7f"/><stop offset="1" stop-color="#6f5f52"/></linearGradient>
+        <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1"><stop offset=".55" stop-color="#2a1d1a" stop-opacity="0"/><stop offset="1" stop-color="#2a1d1a" stop-opacity=".55"/></linearGradient>
+        <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="3" seed="4"/><feColorMatrix values="0 0 0 0 .3  0 0 0 0 .25  0 0 0 0 .2  0 0 0 .5 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+        <filter id="cracks" x="0" y="0" width="100%" height="100%"><feTurbulence type="turbulence" baseFrequency=".01 .045" numOctaves="2" seed="11"/><feColorMatrix values="0 0 0 0 .2  0 0 0 0 .15  0 0 0 0 .12  0 0 0 -2.4 1.35"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+        <filter id="carve" color-interpolation-filters="sRGB" x="-5%" y="-5%" width="110%" height="110%">
+          <feColorMatrix type="saturate" values="0"/>
+          <feComponentTransfer><feFuncR type="linear" slope="1.45" intercept="-.2"/><feFuncG type="linear" slope="1.45" intercept="-.2"/><feFuncB type="linear" slope="1.45" intercept="-.2"/></feComponentTransfer>
+          <feConvolveMatrix order="3" kernelMatrix="-2 -1 0 -1 1 1 0 1 2" preserveAlpha="true"/>
+          <feColorMatrix values=".86 0 0 0 .16  0 .74 0 0 .12  0 0 .6 0 .08  0 0 0 1 0"/>
+        </filter>
+        <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="14"/></filter>
+        <filter id="rim" x="-5%" y="-20%" width="110%" height="140%"><feGaussianBlur stdDeviation="3"/></filter>
+        <radialGradient id="fade"><stop offset=".5" stop-color="#fff"/><stop offset=".82" stop-color="#bbb"/><stop offset="1" stop-color="#000"/></radialGradient>
+        <path id="mtn" d="M0 660 L0 430 C60 390 90 305 150 255 C190 220 205 150 260 120 C300 98 350 120 380 90 C420 55 470 70 520 60 C580 48 620 80 660 95 C700 110 740 100 780 130 C830 165 860 150 900 175 C950 205 990 230 1020 280 C1060 340 1110 360 1200 405 L1200 660 Z"/>
       </defs>
-      <rect width="1200" height="640" fill="url(#sky)"/>
-      <use href="#mtn" fill="url(#rock)"/>
-      <use href="#mtn" fill="#fff" filter="url(#cracks)" opacity=".7"/>
-      <g id="faces"></g>
-      <use href="#mtn" fill="#fff" filter="url(#grain)" opacity=".55" style="mix-blend-mode:multiply"/>
-      <path d="M0 640 L0 520 C120 505 200 540 320 520 C450 498 520 545 650 530 C780 515 860 548 980 528 C1080 512 1140 530 1200 520 L1200 640 Z" fill="#9b917f"/>
-      <path d="M0 640 L0 575 Q40 548 60 575 Q85 540 110 572 Q140 535 165 570 Q200 545 230 578 Q265 538 300 574 Q340 550 370 580 Q410 540 445 576 Q480 552 520 582 Q560 540 600 578 Q640 550 680 580 Q720 542 760 576 Q800 552 840 582 Q880 545 920 578 Q960 552 1000 580 Q1040 542 1080 576 Q1120 552 1160 580 Q1185 560 1200 572 L1200 640 Z" fill="#2f4a33"/>
-      <path d="M0 640 L0 605 Q30 588 55 606 Q90 580 125 607 Q160 586 200 609 Q240 582 280 608 Q320 588 360 610 Q400 584 440 608 Q480 590 520 611 Q560 584 600 609 Q640 588 680 611 Q720 584 760 608 Q800 590 840 611 Q880 584 920 608 Q960 590 1000 611 Q1040 586 1080 609 Q1120 590 1160 611 L1200 600 L1200 640 Z" fill="#1f3423"/>
+      <rect y="-70" width="1200" height="730" fill="url(#sky)"/>
+      <g class="stars" fill="#fff" transform="translate(0 -55)"><circle cx="90" cy="40" r="1.4"/><circle cx="210" cy="70" r="1"/><circle cx="1030" cy="50" r="1.5"/><circle cx="1120" cy="110" r="1"/><circle cx="940" cy="30" r="1.1"/><circle cx="160" cy="130" r="1"/><circle cx="1150" cy="40" r="1.2"/></g>
+      <ellipse cx="600" cy="300" rx="560" ry="360" fill="url(#sun)" class="sunglow"/>
+      <g class="rays" opacity=".18" fill="#fff4cf"><path d="M600 120 L60 -70 L180 -70 Z"/><path d="M600 120 L340 -70 L430 -70 Z"/><path d="M600 120 L770 -70 L860 -70 Z"/><path d="M600 120 L1030 -70 L1150 -70 Z"/></g>
+      <g class="scene">
+        <use href="#mtn" fill="url(#rock)"/>
+        <use href="#mtn" fill="#fff" filter="url(#cracks)" opacity=".75"/>
+        <g id="faces"></g>
+        <use href="#mtn" fill="#fff" filter="url(#grain)" opacity=".5" style="mix-blend-mode:multiply"/>
+        <use href="#mtn" fill="url(#shade)"/>
+        <path d="M0 430 C60 390 90 305 150 255 C190 220 205 150 260 120 C300 98 350 120 380 90 C420 55 470 70 520 60 C580 48 620 80 660 95 C700 110 740 100 780 130 C830 165 860 150 900 175 C950 205 990 230 1020 280 C1060 340 1110 360 1200 405" fill="none" stroke="#ffe2a8" stroke-width="5" opacity=".75" filter="url(#rim)"/>
+        <path d="M0 660 L0 528 C120 512 200 548 320 528 C450 506 520 552 650 538 C780 523 860 556 980 536 C1080 520 1140 538 1200 528 L1200 660 Z" fill="#7a5f4c"/>
+        <path d="M0 660 L0 585 Q40 556 60 585 Q85 548 110 582 Q140 543 165 580 Q200 553 230 588 Q265 546 300 584 Q340 558 370 590 Q410 548 445 586 Q480 560 520 592 Q560 548 600 588 Q640 558 680 590 Q720 550 760 586 Q800 560 840 592 Q880 553 920 588 Q960 560 1000 590 Q1040 550 1080 586 Q1120 560 1160 590 Q1185 568 1200 582 L1200 660 Z" fill="#253a2c"/>
+        <path d="M0 660 L0 618 Q30 600 55 618 Q90 592 125 619 Q160 598 200 621 Q240 594 280 620 Q320 600 360 622 Q400 596 440 620 Q480 602 520 623 Q560 596 600 621 Q640 600 680 623 Q720 596 760 620 Q800 602 840 623 Q880 596 920 620 Q960 602 1000 623 Q1040 598 1080 621 Q1120 602 1160 623 L1200 612 L1200 660 Z" fill="#16261c"/>
+      </g>
     </svg>
+    <figcaption class="rush-cap"><span>The Mount Rushmore of the Raleigh FFL</span></figcaption>
   </figure>
   <div class="grid" id="rush-cards" style="margin-top:18px"></div>
 </section>
@@ -501,6 +545,7 @@ function show(id, scroll) {
   try { localStorage.setItem('rffl-tab', id); } catch (e) {}
   if (scroll) { const top = $('.tabs').offsetTop; if (window.scrollY > top) window.scrollTo({ top }); }
   if (id === 'standings') drawLine();
+  if (id === 'rushmore') playRushmore();
 }
 const tip = $('#tip');
 function showTip(ev, html) { tip.innerHTML = html; tip.hidden = false; const pad = 14, w = tip.offsetWidth, hh = tip.offsetHeight;
@@ -771,28 +816,41 @@ const RUSHMORE = [
 ];
 function renderRushmore() {
   const NS = 'http://www.w3.org/2000/svg', g = $('#faces'); if (!g || g.dataset.done) return; g.dataset.done = 1;
-  const defs = $('#rush-svg defs');
+  const defs = $('#rush-svg defs'), k = 1.12;
   RUSHMORE.forEach((p, i) => {
-    const cid = 'rc' + i, mid = 'rm' + i;
-    defs.insertAdjacentHTML('beforeend', `<clipPath id="${cid}"><ellipse cx="${p.x}" cy="${p.y}" rx="${p.rx}" ry="${p.ry}"/></clipPath><mask id="${mid}" maskContentUnits="userSpaceOnUse"><ellipse cx="${p.x}" cy="${p.y}" rx="${p.rx}" ry="${p.ry}" fill="url(#fade)"/></mask>`);
+    const rx = p.rx * k, ry = p.ry * k, y = p.y + 8, mid = 'rm' + i;
+    defs.insertAdjacentHTML('beforeend', `<mask id="${mid}" maskContentUnits="userSpaceOnUse"><ellipse cx="${p.x}" cy="${y}" rx="${rx}" ry="${ry}" fill="url(#fade)"/></mask>`);
     const grp = document.createElementNS(NS, 'g');
-    grp.innerHTML = `<g class="ph"><ellipse cx="${p.x + 8}" cy="${p.y + 10}" rx="${p.rx + 4}" ry="${p.ry + 4}" fill="#6f665a" opacity=".45"/>
-      <ellipse cx="${p.x}" cy="${p.y}" rx="${p.rx}" ry="${p.ry}" fill="#bdb4a6"/></g>
-      <text x="${p.x}" y="${p.y + 22}" text-anchor="middle" font-family="Big Shoulders Display, Impact, sans-serif" font-weight="900" font-size="${Math.round(p.rx * .75)}" fill="#8f8676" class="ph">${p.name[0]}</text>`;
+    grp.setAttribute('class', 'face'); grp.style.setProperty('--d', (0.35 + i * 0.32) + 's');
+    grp.setAttribute('tabindex', '0'); grp.setAttribute('role', 'link'); grp.setAttribute('aria-label', `${p.name}, number ${i + 1}`);
+    const dust = Array.from({ length: 12 }, (_, j) => { const a = j / 12 * Math.PI * 2 + i; const r = rx * (.9 + (j % 3) * .12);
+      return `<circle class="dust" cx="${p.x + Math.cos(a) * r * .8}" cy="${y + Math.sin(a) * ry * .8}" r="${2 + (j % 3)}" style="--dx:${Math.cos(a) * 40}px;--dy:${Math.sin(a) * 30 - 10}px"/>`; }).join('');
+    grp.innerHTML = `<ellipse cx="${p.x + 10}" cy="${y + 14}" rx="${rx * 1.02}" ry="${ry * 1.02}" fill="#2b1d16" opacity=".5" filter="url(#soft)"/>
+      <g class="ph"><ellipse cx="${p.x}" cy="${y}" rx="${rx}" ry="${ry}" fill="#c9ad8c"/>
+      <text x="${p.x}" y="${y + 26}" text-anchor="middle" font-family="Big Shoulders Display, Impact, sans-serif" font-weight="900" font-size="${Math.round(rx * .8)}" fill="#8a7461">${p.name[0]}</text></g>
+      <g class="plate"><text x="${p.x + 1.5}" y="${y + ry + 40}" text-anchor="middle" class="plate-sh">${p.name.toUpperCase()}</text>
+      <text x="${p.x}" y="${y + ry + 38}" text-anchor="middle" class="plate-tx">${p.name.toUpperCase()}</text>
+      <text x="${p.x}" y="${y + ry + 60}" text-anchor="middle" class="plate-n">No. ${i + 1}</text></g>
+      <g class="dusts">${dust}</g>`;
     const img = document.createElementNS(NS, 'image');
-    img.setAttribute('href', `img/rushmore/${p.file}.jpg?v=2`);
-    img.setAttribute('x', p.x - p.rx * 1.15); img.setAttribute('y', p.y - p.ry * 1.1);
-    img.setAttribute('width', p.rx * 2.3); img.setAttribute('height', p.ry * 2.25);
+    img.setAttribute('href', `img/rushmore/${p.file}.jpg?v=3`);
+    img.setAttribute('x', p.x - rx * 1.15); img.setAttribute('y', y - ry * 1.1);
+    img.setAttribute('width', rx * 2.3); img.setAttribute('height', ry * 2.25);
     img.setAttribute('preserveAspectRatio', 'xMidYMid slice');
-    img.setAttribute('filter', 'url(#stone)'); img.setAttribute('mask', `url(#${mid})`);
-    img.setAttribute('aria-hidden', 'true');
+    img.setAttribute('filter', 'url(#carve)'); img.setAttribute('mask', `url(#${mid})`);
+    img.setAttribute('class', 'stone-face'); img.setAttribute('aria-hidden', 'true');
     img.addEventListener('load', () => grp.querySelectorAll('.ph').forEach(e => e.remove()));
     img.addEventListener('error', () => img.remove());
-    grp.appendChild(img); g.appendChild(grp);
+    grp.insertBefore(img, grp.querySelector('.plate'));
+    const go = () => document.getElementById('rush-card-' + i)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    grp.addEventListener('click', go); grp.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+    g.appendChild(grp);
   });
-  $('#rush-cards').innerHTML = RUSHMORE.map((p, i) => `<div class="card rush-card"><div class="n">${i + 1}</div><div><h3>${esc(p.name)}</h3><div class="tl">${esc(p.tag)}</div></div>
+  $('#rush-cards').innerHTML = RUSHMORE.map((p, i) => `<div class="card rush-card" id="rush-card-${i}"><div class="n">${i + 1}</div><div><h3>${esc(p.name)}</h3><div class="tl">${esc(p.tag)}</div></div>
     <p style="grid-column:2">${esc(p.text)}</p><div class="chips">${p.chips.map(c => `<span>${esc(c)}</span>`).join('')}</div></div>`).join('');
 }
+function playRushmore() { const f = $('#rush-fig'); if (!f) return; f.classList.remove('play'); void f.offsetWidth; f.classList.add('play'); }
+
 /* ---------------- boot ---------------- */
 function refresh() {
   computeAll(); buildH2H();
