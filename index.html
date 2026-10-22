@@ -8,7 +8,18 @@
 <meta property="og:title" content="Raleigh Fantasy Football League">
 <meta property="og:description" content="Standings, matchups, power rankings and league history.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231e1e1f'/%3E%3Crect x='8' y='10' width='48' height='7' fill='%23ef5b5b'/%3E%3Crect x='8' y='21' width='38' height='7' fill='%23f6a25a'/%3E%3Crect x='8' y='32' width='30' height='7' fill='%23f7ef6a'/%3E%3Crect x='8' y='43' width='20' height='7' fill='%238fe381'/%3E%3C/svg%3E">
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}
+.rush{margin:0;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:#cfe3f2}
+.rush svg{display:block;width:100%;height:auto}
+#rush-cards{grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr))}
+.rush-card{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;align-items:start}
+.rush-card .n{font:900 44px/1 var(--display);color:var(--gold);grid-row:span 3}
+.rush-card h3{font-size:28px}
+.rush-card .tl{font:600 13px/1.3 var(--cond);letter-spacing:.08em;text-transform:uppercase;color:var(--fg-2)}
+.rush-card p{margin:4px 0 0;color:var(--fg-2);font-size:15px;max-width:60ch}
+.rush-card .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;grid-column:2}
+.rush-card .chips span{font:600 12px/1 var(--cond);letter-spacing:.06em;text-transform:uppercase;padding:5px 8px;border-radius:3px;background:var(--panel-2);color:var(--fg)}
+</style>
 <title>Raleigh Fantasy Football League</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@500;600&display=swap">
@@ -281,7 +292,7 @@ code.snip{display:block;white-space:pre-wrap;word-break:break-all;background:var
 <section id="standings" data-tab="Standings" hidden>
   <div class="head"><div><div class="eyebrow">2026 · through Week <span class="lw"></span></div><h2>Standings</h2><p id="stand-note"></p></div><span class="pending" id="stand-pending" hidden>W-L unlocks with the ESPN sync</span></div>
   <p class="swipe">Swipe for more stats →</p><div class="tw"><table id="stand"></table></div>
-  <p class="foot"><span class="dot"></span>Still alive in survivor. <b>Big Sexy</b> marks the current points leader. <b>Little Sexys</b> counts weeks a team posted the week's top score.</p>
+  <p class="foot"><span class="dot"></span>Still alive in survivor. <b>High T</b> marks the current points leader. <b>Little Sexys</b> counts weeks a team posted the week's top score.</p>
   <div class="card" style="margin-top:24px">
     <div class="head" style="margin-bottom:8px"><div><h3>Weekly scores</h3></div><div class="pills" id="pick"></div></div>
     <div class="chart-wrap chart" id="linechart"></div>
@@ -315,6 +326,32 @@ code.snip{display:block;white-space:pre-wrap;word-break:break-all;background:var
   <div id="h2h-body"></div>
 </section>
 
+<section id="rushmore" data-tab="Mt. Rushmore" hidden>
+  <div class="head"><div><div class="eyebrow">Body of work · 2023 to now</div><h2>Mount Rushmore</h2><p>The four managers carved into league history. Résumés count every game since 2023.</p></div></div>
+  <figure class="rush">
+    <svg viewBox="0 0 1200 640" role="img" aria-labelledby="rush-t" id="rush-svg">
+      <title id="rush-t">Mount Rushmore carved with Avioli, Dave, Erich and Jeremy</title>
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fb2e0"/><stop offset=".7" stop-color="#cfe3f2"/><stop offset="1" stop-color="#e9eef0"/></linearGradient>
+        <linearGradient id="rock" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfc8bd"/><stop offset=".55" stop-color="#b3aa9c"/><stop offset="1" stop-color="#8f8676"/></linearGradient>
+        <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" seed="4"/><feColorMatrix values="0 0 0 0 .35  0 0 0 0 .32  0 0 0 0 .28  0 0 0 .55 0"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+        <filter id="cracks" x="0" y="0" width="100%" height="100%"><feTurbulence type="turbulence" baseFrequency=".012 .05" numOctaves="2" seed="11"/><feColorMatrix values="0 0 0 0 .25  0 0 0 0 .22  0 0 0 0 .18  0 0 0 -2.2 1.3"/><feComposite in2="SourceGraphic" operator="in"/></filter>
+        <filter id="stone" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncR type="linear" slope="1.15" intercept="-.04"/><feFuncG type="linear" slope="1.15" intercept="-.04"/><feFuncB type="linear" slope="1.15" intercept="-.04"/></feComponentTransfer><feColorMatrix values=".72 0 0 0 .2  0 .68 0 0 .19  0 0 .6 0 .17  0 0 0 1 0"/></filter>
+        <radialGradient id="fade"><stop offset=".4" stop-color="#fff"/><stop offset=".78" stop-color="#999"/><stop offset="1" stop-color="#000"/></radialGradient>
+        <path id="mtn" d="M0 640 L0 420 C60 380 90 300 150 250 C190 215 205 150 260 120 C300 98 350 120 380 90 C420 55 470 70 520 60 C580 48 620 80 660 95 C700 110 740 100 780 130 C830 165 860 150 900 175 C950 205 990 230 1020 280 C1060 340 1110 360 1200 400 L1200 640 Z"/>
+      </defs>
+      <rect width="1200" height="640" fill="url(#sky)"/>
+      <use href="#mtn" fill="url(#rock)"/>
+      <use href="#mtn" fill="#fff" filter="url(#cracks)" opacity=".7"/>
+      <g id="faces"></g>
+      <use href="#mtn" fill="#fff" filter="url(#grain)" opacity=".55" style="mix-blend-mode:multiply"/>
+      <path d="M0 640 L0 520 C120 505 200 540 320 520 C450 498 520 545 650 530 C780 515 860 548 980 528 C1080 512 1140 530 1200 520 L1200 640 Z" fill="#9b917f"/>
+      <path d="M0 640 L0 575 Q40 548 60 575 Q85 540 110 572 Q140 535 165 570 Q200 545 230 578 Q265 538 300 574 Q340 550 370 580 Q410 540 445 576 Q480 552 520 582 Q560 540 600 578 Q640 550 680 580 Q720 542 760 576 Q800 552 840 582 Q880 545 920 578 Q960 552 1000 580 Q1040 542 1080 576 Q1120 552 1160 580 Q1185 560 1200 572 L1200 640 Z" fill="#2f4a33"/>
+      <path d="M0 640 L0 605 Q30 588 55 606 Q90 580 125 607 Q160 586 200 609 Q240 582 280 608 Q320 588 360 610 Q400 584 440 608 Q480 590 520 611 Q560 584 600 609 Q640 588 680 611 Q720 584 760 608 Q800 590 840 611 Q880 584 920 608 Q960 590 1000 611 Q1040 586 1080 609 Q1120 590 1160 611 L1200 600 L1200 640 Z" fill="#1f3423"/>
+    </svg>
+  </figure>
+  <div class="grid" id="rush-cards" style="margin-top:18px"></div>
+</section>
 <section id="draft" data-tab="Draft & Trades" hidden>
   <div class="soon"><div class="eyebrow">Draft grades · Trade grades</div><b>Coming Soon</b><p class="status" style="max-width:44ch">Something worth arguing about is on the way.</p></div>
 </section>
@@ -322,7 +359,8 @@ code.snip{display:block;white-space:pre-wrap;word-break:break-all;background:var
 <section id="lore" data-tab="Lore" hidden>
   <div class="head"><div><div class="eyebrow">Tradition</div><h2>Lore</h2></div></div>
   <div class="grid g3">
-    <div class="award" style="--c:var(--gold)"><div class="eyebrow">The belt</div><div class="who">The Big Sexy</div><div class="sub">Most total points in the regular season. Decided after the final regular-season week.</div></div>
+    <div class="award" style="--c:var(--gold)"><div class="eyebrow">The trophy</div><div class="who">The Big Sexy</div><div class="sub">Goes to the league champion. The only thing that matters.</div></div>
+    <div class="award" style="--c:var(--t2)"><div class="eyebrow">The belt</div><div class="who">High T</div><div class="sub">Most total points in the regular season. Decided after the final regular-season week.</div></div>
     <div class="award" style="--c:var(--t3)"><div class="eyebrow">Weekly honor</div><div class="who">The Little Sexy</div><div class="sub">Top score of the week. Comes with the weekly high-score payout.</div></div>
     <div class="award" style="--c:var(--t1)"><div class="eyebrow">The punishment</div><div class="who">Sticker B*tch</div><div class="sub">Last place. Carries it for a full year.</div></div>
     <div class="award" style="--c:var(--t5)"><div class="eyebrow">The side game</div><div class="who">Survivor</div><div class="sub">Lowest score each week is eliminated until one remains.</div></div>
@@ -479,8 +517,8 @@ function renderOverview() {
   const lastTop = ST.weekTop[LW - 1];
   const bottom = ST.table.slice().sort((a, b) => S.games ? (a.w + a.t / 2) - (b.w + b.t / 2) || a.pf - b.pf : a.pf - b.pf)[0];
   $('#awards').innerHTML = [
-    ['Defending champ', champ, '2025 title. Also took the 2025 survivor pot.', 'var(--gold)'],
-    ['The Big Sexy race', ST.big.team, `Leads with ${fmtTot(ST.big.pf)} points. The belt goes to the most total points in the regular season.`, 'var(--gold)'],
+    ['Big Sexy holder', champ, 'Defending champion. Also took the 2025 survivor pot.', 'var(--gold)'],
+    ['The High T race', ST.big.team, `Leads with ${fmtTot(ST.big.pf)} points. The belt goes to the most total points in the regular season.`, 'var(--t2)'],
     [`The Little Sexy · Week ${LW}`, lastTop.teams.join(' & '), `Top score of the week: ${fmt(lastTop.score)}.`, 'var(--t3)'],
     ['Reigning Sticker B*tch', sticker, 'Last place in 2025. Wears it until someone takes it.', 'var(--t1)'],
     ['Sticker watch', bottom.team, S.games ? `Bottom of the standings at ${recStr(bottom)}, ${fmtTot(bottom.pf)} points.` : `Fewest points in 2026 (${fmtTot(bottom.pf)}).`, 'var(--t6)'],
@@ -529,7 +567,7 @@ function renderStandings() {
   $('#stand-note').textContent = g ? 'Sorted by record, then points for. Synced from ESPN.' : 'Sorted by points for until the ESPN sync adds wins and losses. Scores are rounded, as in the commissioner sheet.';
   const alive = ST.survivor.alive;
   $('#stand').innerHTML = `<thead><tr><th></th><th class="l">Team</th>${g ? '<th>W-L</th>' : ''}<th>PF</th>${g ? '<th>PA</th>' : ''}<th>Avg</th><th>Last 3</th><th>High</th><th>Low</th><th>Std dev</th><th>Little Sexys</th><th class="l">Trend</th></tr></thead><tbody>` +
-    ST.table.map((r, i) => `<tr><td class="rk num">${i + 1}</td><td class="team">${alive.includes(r.team) ? '<span class="dot" title="Alive in survivor"></span>' : ''}${esc(r.team)}${r.team === ST.big.team ? '<span class="tag belt">Big Sexy</span>' : ''}</td>
+    ST.table.map((r, i) => `<tr><td class="rk num">${i + 1}</td><td class="team">${alive.includes(r.team) ? '<span class="dot" title="Alive in survivor"></span>' : ''}${esc(r.team)}${r.team === ST.big.team ? '<span class="tag belt">High T</span>' : ''}</td>
     ${g ? `<td class="num wl">${recStr(r)}</td>` : ''}<td class="num"><b>${fmtTot(r.pf)}</b></td>${g ? `<td class="num">${fmtTot(r.pa)}</td>` : ''}<td class="num">${r1(r.avg)}</td><td class="num">${r1(r.last3)}</td><td class="num">${fmt(r.hi)}</td><td class="num">${fmt(r.lo)}</td><td class="num">${r1(r.sd)}</td><td class="num">${r.little || ''}</td><td class="l">${spark(r.scores)}</td></tr>`).join('') + `</tbody>`;
   if (!TEAMS.includes(picked)) picked = TEAMS[0];
   $('#pick').innerHTML = TEAMS.map(t => `<button aria-pressed="${t === picked}" data-t="${esc(t)}">${esc(t)}</button>`).join('');
@@ -616,8 +654,8 @@ function renderHistory() {
   const seasonBig = y => seasonStats(M[y]).big;
   $('#years').innerHTML = ['2025', '2024', '2023'].map(y => { const h = H[y], p = P[y], bs = seasonBig(y);
     return `<div class="card yr"><h3 style="font-size:40px">${y}</h3>
-    <div class="podium">${h.place.slice(0, 3).map((t, i) => `<div><div class="eyebrow">${['Champion', '2nd', '3rd'][i]}</div><b>${esc(yl(t, y))}</b></div>`).join('')}</div>
-    <ul class="list"><li><span class="k">The Big Sexy</span><b>${esc(yl(bs.team, y))} · ${fmtTot(bs.pf)} pts</b></li>
+    <div class="podium">${h.place.slice(0, 3).map((t, i) => `<div><div class="eyebrow">${['Big Sexy', '2nd', '3rd'][i]}</div><b>${esc(yl(t, y))}</b></div>`).join('')}</div>
+    <ul class="list"><li><span class="k">High T</span><b>${esc(yl(bs.team, y))} · ${fmtTot(bs.pf)} pts</b></li>
     <li><span class="k">Survivor</span><b>${esc(yl(h.survivor, y))}</b></li><li><span class="k">Sticker B*tch</span><b>${esc(yl(h.sticker, y))}</b></li>
     <li><span class="k">Playoffs</span><span>${h.place.slice(3).map(t => esc(yl(t, y))).join(', ')}</span></li>
     ${p ? `<li><span class="k">Biggest payday</span><b>${esc(Object.entries(p)[0][0])} · $${Object.entries(p)[0][1]}</b></li>` : ''}</ul></div>`; }).join('');
@@ -641,12 +679,12 @@ function renderHistory() {
     ['Lowest week ever', fmt(loW.v), `${yl(loW.t, loW.y)}, ${loW.y} Week ${loW.w}. Not a typo.`],
     ['Best career average', r1(X[bestAvg].avg), `${bestAvg} (min. 2 seasons)`],
     bestRec ? ['Best career record', recStr(X[bestRec].rec), `${bestRec}, regular season`] : null,
-    ['Champions', champs.length, champs.flatMap(m => X[m].titles.map(y => `${yl(m, y)} ${y}`)).sort((a, b) => a.slice(-4) - b.slice(-4)).join(' · ')],
-    ['Big Sexy belts', Object.keys(H).length, Object.keys(H).map(y => `${yl(seasonBig(y).team, y)} ${y}`).join(' · ')],
+    ['Big Sexy winners', champs.length, champs.flatMap(m => X[m].titles.map(y => `${yl(m, y)} ${y}`)).sort((a, b) => a.slice(-4) - b.slice(-4)).join(' · ')],
+    ['High T belts', Object.keys(H).length, Object.keys(H).map(y => `${yl(seasonBig(y).team, y)} ${y}`).join(' · ')],
   ].filter(Boolean).map(([k, v, s]) => `<div class="card"><div class="eyebrow">${k}</div><div class="callout num" style="margin:8px 0 4px;font-size:40px">${esc(v)}</div><div style="color:var(--fg-2);font-size:14px">${esc(s)}</div></div>`).join('');
   const fin = (n, y) => { const h = H[y]; if (!M[y].teams[n]) return '<span class="fM">·</span>'; const i = h.place.indexOf(n); if (i >= 0) return `<span class="fin ${i ? '' : 'f1'}">${i + 1}</span>`; return h.sticker === n ? '<span class="fin fL">SB</span>' : '<span class="fin fM">M</span>'; };
   const rows = all.sort((a, b) => X[b].titles.length - X[a].titles.length || X[b].avg - X[a].avg);
-  $('#career').innerHTML = `<thead><tr><th class="l">Manager</th><th>2023</th><th>2024</th><th>2025</th>${hasRec ? '<th>Career W-L</th>' : ''}<th>Weeks</th><th>Avg</th><th>Best week</th><th>Worst week</th><th>Titles</th><th>Survivor</th><th>Big Sexy</th></tr></thead><tbody>` +
+  $('#career').innerHTML = `<thead><tr><th class="l">Manager</th><th>2023</th><th>2024</th><th>2025</th>${hasRec ? '<th>Career W-L</th>' : ''}<th>Weeks</th><th>Avg</th><th>Best week</th><th>Worst week</th><th>Titles</th><th>Survivor</th><th>High T</th></tr></thead><tbody>` +
     rows.map(n => { const x = X[n]; return `<tr><td class="team">${esc(n)}${n === 'Erich & Nick' ? '<div class="src" style="font:500 12px var(--body);text-transform:none;margin-top:4px">Erich solo in 2023</div>' : ''}${TEAMS.includes(n) ? '' : '<span class="tag out">Alumni</span>'}</td>${['2023', '2024', '2025'].map(y => `<td>${fin(n, y)}</td>`).join('')}
     ${hasRec ? `<td class="num wl">${recStr(x.rec)}</td>` : ''}<td class="num">${x.games}</td><td class="num">${r1(x.avg)}</td><td class="num">${fmt(x.best.v)} <span class="foot">'${x.best.y.slice(2)}</span></td><td class="num">${fmt(x.worst.v)} <span class="foot">'${x.worst.y.slice(2)}</span></td>
     <td class="num">${x.titles.length || ''}</td><td class="num">${x.surv.length || ''}</td><td class="num">${x.belts.length || ''}</td></tr>`; }).join('') + '</tbody>';
@@ -715,10 +753,50 @@ function normalizeEspn(raw) {
   }
   return { data: out, notes };
 }
+
+/* ---------------- Mount Rushmore ---------------- */
+const RUSHMORE = [
+  { name: 'Avioli', file: 'avioli', tag: 'The most complete résumé', x: 330, y: 255, rx: 92, ry: 122,
+    chips: ['Playoffs 3 of 3', 'Big Sexy 2024', '4-2 in playoffs', 'Highest week ever: 180.32'],
+    text: 'The only manager to make the playoffs every year and win the Big Sexy (3rd, champion, 6th). Tied for the most playoff wins, owns the highest single week in league history, and has the best all-play record in 2026. No real weak season.' },
+  { name: 'Dave', file: 'dave', tag: 'The most consistent winner', x: 530, y: 225, rx: 84, ry: 114,
+    chips: ['Playoffs 3 of 3', 'High T 2025', 'Best career record', '116.7 career avg'],
+    text: 'Playoffs every year (2nd, 5th, 3rd), the best career record in the league, and the highest average of anyone still in it. Won High T in 2025 and opened 2026 at 6-0. The knock: a 2-3 playoff record and no Big Sexy yet. Win one and he moves to the top.' },
+  { name: 'Erich', file: 'erich', tag: 'The big-game manager', x: 715, y: 275, rx: 76, ry: 104,
+    chips: ['Big Sexy 2023', 'High T 2023', 'Two finals', '4-1 in playoffs'],
+    text: 'Won the first Big Sexy in 2023 along with High T, the only manager to win both in the same year. The only one to reach two finals, and the best playoff record in the league. The 2-12 Sticker B*tch season with Nick in 2024 keeps the regular-season record ordinary. When it counts, nobody has been better.' },
+  { name: 'Jeremy', file: 'jeremy', tag: 'The full range', x: 905, y: 300, rx: 86, ry: 116,
+    chips: ['Big Sexy 2025', 'Survivor 2025', '3-1 in playoffs', 'Sticker B*tch 2023'],
+    text: 'Champion and survivor winner in 2025, 3rd in 2024, and 3-1 in the playoffs. Also the 2023 Sticker B*tch with the 8.74-point week. Nobody else has been both the worst and the best in league history.' },
+];
+function renderRushmore() {
+  const NS = 'http://www.w3.org/2000/svg', g = $('#faces'); if (!g || g.dataset.done) return; g.dataset.done = 1;
+  const defs = $('#rush-svg defs');
+  RUSHMORE.forEach((p, i) => {
+    const cid = 'rc' + i, mid = 'rm' + i;
+    defs.insertAdjacentHTML('beforeend', `<clipPath id="${cid}"><ellipse cx="${p.x}" cy="${p.y}" rx="${p.rx}" ry="${p.ry}"/></clipPath><mask id="${mid}" maskContentUnits="userSpaceOnUse"><ellipse cx="${p.x}" cy="${p.y}" rx="${p.rx}" ry="${p.ry}" fill="url(#fade)"/></mask>`);
+    const grp = document.createElementNS(NS, 'g');
+    grp.innerHTML = `<g class="ph"><ellipse cx="${p.x + 8}" cy="${p.y + 10}" rx="${p.rx + 4}" ry="${p.ry + 4}" fill="#6f665a" opacity=".45"/>
+      <ellipse cx="${p.x}" cy="${p.y}" rx="${p.rx}" ry="${p.ry}" fill="#bdb4a6"/></g>
+      <text x="${p.x}" y="${p.y + 22}" text-anchor="middle" font-family="Big Shoulders Display, Impact, sans-serif" font-weight="900" font-size="${Math.round(p.rx * .75)}" fill="#8f8676" class="ph">${p.name[0]}</text>`;
+    const img = document.createElementNS(NS, 'image');
+    img.setAttribute('href', `img/rushmore/${p.file}.jpg`);
+    img.setAttribute('x', p.x - p.rx * 1.15); img.setAttribute('y', p.y - p.ry * 1.1);
+    img.setAttribute('width', p.rx * 2.3); img.setAttribute('height', p.ry * 2.25);
+    img.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+    img.setAttribute('filter', 'url(#stone)'); img.setAttribute('mask', `url(#${mid})`);
+    img.setAttribute('aria-hidden', 'true');
+    img.addEventListener('load', () => grp.querySelectorAll('.ph').forEach(e => e.remove()));
+    img.addEventListener('error', () => img.remove());
+    grp.appendChild(img); g.appendChild(grp);
+  });
+  $('#rush-cards').innerHTML = RUSHMORE.map((p, i) => `<div class="card rush-card"><div class="n">${i + 1}</div><div><h3>${esc(p.name)}</h3><div class="tl">${esc(p.tag)}</div></div>
+    <p style="grid-column:2">${esc(p.text)}</p><div class="chips">${p.chips.map(c => `<span>${esc(c)}</span>`).join('')}</div></div>`).join('');
+}
 /* ---------------- boot ---------------- */
 function refresh() {
   computeAll(); buildH2H();
-  renderOverview(); renderRankings(); renderStandings(); renderMatchups(); renderSurvivor(); renderHistory(); renderH2H(); drawLine();
+  renderOverview(); renderRankings(); renderStandings(); renderMatchups(); renderSurvivor(); renderHistory(); renderH2H(); renderRushmore(); drawLine();
 }
 document.addEventListener('click', e => { const a = e.target.closest('[data-go]'); if (a) { e.preventDefault(); show(a.dataset.go, true); } });
 const getJSON = async (u, fallback) => { try { const r = await fetch(u + '?t=' + Math.floor(Date.now() / 300000), { cache: 'no-cache' }); return r.ok ? await r.json() : fallback; } catch (e) { return fallback; } };
