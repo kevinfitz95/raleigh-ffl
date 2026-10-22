@@ -780,7 +780,7 @@ function renderRushmore() {
       <ellipse cx="${p.x}" cy="${p.y}" rx="${p.rx}" ry="${p.ry}" fill="#bdb4a6"/></g>
       <text x="${p.x}" y="${p.y + 22}" text-anchor="middle" font-family="Big Shoulders Display, Impact, sans-serif" font-weight="900" font-size="${Math.round(p.rx * .75)}" fill="#8f8676" class="ph">${p.name[0]}</text>`;
     const img = document.createElementNS(NS, 'image');
-    img.setAttribute('href', `img/rushmore/${p.file}.jpg`);
+    img.setAttribute('href', `img/rushmore/${p.file}.jpg?v=2`);
     img.setAttribute('x', p.x - p.rx * 1.15); img.setAttribute('y', p.y - p.ry * 1.1);
     img.setAttribute('width', p.rx * 2.3); img.setAttribute('height', p.ry * 2.25);
     img.setAttribute('preserveAspectRatio', 'xMidYMid slice');
