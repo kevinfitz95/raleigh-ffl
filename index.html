@@ -46,6 +46,19 @@
 @keyframes rush-plate{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 @keyframes rush-dust{0%{opacity:0;transform:translate(0,0)}25%{opacity:.9}100%{opacity:0;transform:translate(var(--dx),var(--dy))}}
 @media (max-width:640px){.plate-tx,.plate-sh{font-size:36px}.plate-n{font-size:18px}.rush-cap{padding:9px 6px}.rush-cap span{letter-spacing:.08em}}
+
+.ap-sum{display:grid;gap:16px}
+.ap-big{font:900 clamp(48px,9vw,72px)/1 var(--display);margin:6px 0 4px}
+.ap-weeks{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px}
+.apw{display:grid;gap:3px;padding:8px 6px;border-radius:4px;text-align:center;background:color-mix(in srgb,var(--win) calc(var(--p) * 70%),var(--panel-2))}
+.apw b{font:800 18px/1 var(--display)}
+.apw small{font-size:11px;color:var(--fg-2)}
+.apw .eyebrow{font-size:10px;letter-spacing:.08em;color:var(--fg-2)}
+.apdots{display:inline-flex;gap:3px;vertical-align:middle}
+.apd{width:10px;height:10px;border-radius:2px;background:var(--mid);display:inline-block}
+.apd.ap-w{background:var(--win)}
+.apd.ap-l{background:var(--loss)}
+.apd.ap-t{background:var(--muted)}
 </style>
 <title>Raleigh Fantasy Football League</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -319,7 +332,7 @@ code.snip{display:block;white-space:pre-wrap;word-break:break-all;background:var
 <section id="standings" data-tab="Standings" hidden>
   <div class="head"><div><div class="eyebrow">2026 · through Week <span class="lw"></span></div><h2>Standings</h2><p id="stand-note"></p></div><span class="pending" id="stand-pending" hidden>W-L unlocks with the ESPN sync</span></div>
   <p class="swipe">Swipe for more stats →</p><div class="tw"><table id="stand"></table></div>
-  <p class="foot"><span class="dot"></span>Still alive in survivor. <b>High T</b> marks the current points leader. <b>Little Sexys</b> counts weeks a team posted the week's top score.</p>
+  <p class="foot"><span class="dot"></span>Still alive in survivor. <b>High T</b> marks the current points leader. <b>Little Sexys</b> counts weeks a team posted the week's top score. <b>vs League</b> is your record if you'd played all 11 teams every week: top score of the week is 11-0, second is 10-1, and so on.</p>
   <div class="card" style="margin-top:24px">
     <div class="head" style="margin-bottom:8px"><div><h3>Weekly scores</h3></div><div class="pills" id="pick"></div></div>
     <div class="chart-wrap chart" id="linechart"></div>
@@ -348,8 +361,10 @@ code.snip{display:block;white-space:pre-wrap;word-break:break-all;background:var
 </section>
 
 <section id="rivalries" data-tab="Head-to-Head" hidden>
-  <div class="head"><div><div class="eyebrow">All-time · every game since 2023</div><h2>Head-to-Head</h2><p>Pick a manager to see their record against everyone they've played. Regular season and championship-bracket playoff games count; consolation games don't.</p></div></div>
+  <div class="head"><div><div class="eyebrow">This season and all-time</div><h2>Head-to-Head</h2><p>Pick a manager. First: this season's record if they'd played everyone every week. Below: their real all-time record against each opponent, counting regular season and championship-bracket playoff games.</p></div></div>
   <div class="pills" id="h2h-pick" style="margin-bottom:14px"></div>
+  <div id="ap-body"></div>
+  <div class="head" style="margin-top:36px"><div><div class="eyebrow">All-time · actual games</div><h3>Real head-to-head record</h3></div></div>
   <div id="h2h-body"></div>
 </section>
 
@@ -611,9 +626,9 @@ function renderStandings() {
   $('#stand-pending').hidden = g;
   $('#stand-note').textContent = g ? 'Sorted by record, then points for. Synced from ESPN.' : 'Sorted by points for until the ESPN sync adds wins and losses. Scores are rounded, as in the commissioner sheet.';
   const alive = ST.survivor.alive;
-  $('#stand').innerHTML = `<thead><tr><th></th><th class="l">Team</th>${g ? '<th>W-L</th>' : ''}<th>PF</th>${g ? '<th>PA</th>' : ''}<th>Avg</th><th>Last 3</th><th>High</th><th>Low</th><th>Std dev</th><th>Little Sexys</th><th class="l">Trend</th></tr></thead><tbody>` +
+  $('#stand').innerHTML = `<thead><tr><th></th><th class="l">Team</th>${g ? '<th>W-L</th>' : ''}<th title="Record if you played every team every week">vs League</th><th>PF</th>${g ? '<th>PA</th>' : ''}<th>Avg</th><th>Last 3</th><th>High</th><th>Low</th><th>Std dev</th><th>Little Sexys</th><th class="l">Trend</th></tr></thead><tbody>` +
     ST.table.map((r, i) => `<tr><td class="rk num">${i + 1}</td><td class="team">${alive.includes(r.team) ? '<span class="dot" title="Alive in survivor"></span>' : ''}${esc(r.team)}${r.team === ST.big.team ? '<span class="tag belt">High T</span>' : ''}</td>
-    ${g ? `<td class="num wl">${recStr(r)}</td>` : ''}<td class="num"><b>${fmtTot(r.pf)}</b></td>${g ? `<td class="num">${fmtTot(r.pa)}</td>` : ''}<td class="num">${r1(r.avg)}</td><td class="num">${r1(r.last3)}</td><td class="num">${fmt(r.hi)}</td><td class="num">${fmt(r.lo)}</td><td class="num">${r1(r.sd)}</td><td class="num">${r.little || ''}</td><td class="l">${spark(r.scores)}</td></tr>`).join('') + `</tbody>`;
+    ${g ? `<td class="num wl">${recStr(r)}</td>` : ''}<td class="num">${recStr(allPlay(r.team).tot)}</td><td class="num"><b>${fmtTot(r.pf)}</b></td>${g ? `<td class="num">${fmtTot(r.pa)}</td>` : ''}<td class="num">${r1(r.avg)}</td><td class="num">${r1(r.last3)}</td><td class="num">${fmt(r.hi)}</td><td class="num">${fmt(r.lo)}</td><td class="num">${r1(r.sd)}</td><td class="num">${r.little || ''}</td><td class="l">${spark(r.scores)}</td></tr>`).join('') + `</tbody>`;
   if (!TEAMS.includes(picked)) picked = TEAMS[0];
   $('#pick').innerHTML = TEAMS.map(t => `<button aria-pressed="${t === picked}" data-t="${esc(t)}">${esc(t)}</button>`).join('');
 }
@@ -736,6 +751,19 @@ function renderHistory() {
 }
 
 /* ---------------- head-to-head ---------------- */
+/* every-week ("all-play") records for the current season */
+function allPlay(me) {
+  const weeks = [], vs = {}, tot = { w: 0, l: 0, t: 0 };
+  for (let i = 0; i < LW; i++) {
+    const m = S.teams[me]?.[i]; if (m == null) continue;
+    const wk = { week: i + 1, score: m, w: 0, l: 0, t: 0 };
+    for (const o of TEAMS) { if (o === me) continue; const x = S.teams[o]?.[i]; if (x == null) continue;
+      const r = (vs[o] ??= { w: 0, l: 0, t: 0, weeks: [] }); const k = m > x ? 'w' : m < x ? 'l' : 't';
+      wk[k]++; r[k]++; tot[k]++; r.weeks.push(k); }
+    weeks.push(wk);
+  }
+  return { weeks, vs, tot };
+}
 let h2hPick = 'Kevin';
 function renderH2H() {
   const has = Object.keys(H2H).length > 0;
@@ -743,6 +771,7 @@ function renderH2H() {
   if (!people.includes(h2hPick)) h2hPick = people[0];
   $('#h2h-pick').innerHTML = people.map(n => `<button aria-pressed="${n === h2hPick}" data-n="${esc(n)}">${esc(n)}</button>`).join('');
   $('#h2h-pick').onclick = e => { const b = e.target.closest('button'); if (!b) return; h2hPick = b.dataset.n; renderH2H(); };
+  renderAllPlay();
   if (!has) { $('#h2h-body').innerHTML = `<div class="card"><h3>Waiting on ESPN</h3><p class="status" style="margin-top:8px">The commissioner sheet has scores but not who played whom. Records appear here after the ESPN sync.</p></div>`; return; }
   const me = H2H[h2hPick] || {};
   const opps = Object.keys(me).sort((a, b) => pct(me[b]) - pct(me[a]) || (me[b].w - me[a].w));
@@ -752,6 +781,31 @@ function renderH2H() {
     opps.map(o => { const r = me[o], n = r.games.length, l = r.games.at(-1);
       return `<tr><td class="team">${esc(o)}${TEAMS.includes(o) ? '' : '<span class="tag out">Alumni</span>'}</td><td class="num wl">${recStr(r)}</td><td class="num">${Math.round(pct(r) * 100)}%</td><td class="num">${r1(r.pf / n)}</td><td class="num">${r1(r.pa / n)}</td><td class="num">${r.pw + r.pl ? r.pw + '-' + r.pl : ''}</td><td class="num">${streak(r.games)}</td><td class="l num">${l.res} ${fmt(l.ms)}–${fmt(l.os)} · ${l.y} ${l.po ? 'playoffs' : 'Wk ' + l.w}</td></tr>`; }).join('') +
     `</tbody><tfoot><tr><td class="team">All-time</td><td class="num wl">${recStr(tot)}</td><td class="num">${Math.round(pct(tot) * 100)}%</td><td colspan="5"></td></tr></tfoot></table></div>`;
+}
+
+const nextVs = (me, o) => S.games?.find(g => !g.done && g.po === 0 && ((g.a === me && g.b === o) || (g.b === me && g.a === o)))?.w;
+function renderAllPlay() {
+  const me = h2hPick; if (!S.teams[me]) { $('#ap-body').innerHTML = ''; return; }
+  const ap = allPlay(me);
+  const rank = 1 + TEAMS.filter(o => o !== me && pct(allPlay(o).tot) > pct(ap.tot)).length;
+  const actual = {};
+  if (S.games) for (const g of S.games) { if (!g.done || g.po !== 0 || !g.b) continue;
+    if (g.a === me) (actual[g.b] ??= []).push({ w: g.w, res: g.as > g.bs ? 'W' : g.as < g.bs ? 'L' : 'T', ms: g.as, os: g.bs });
+    if (g.b === me) (actual[g.a] ??= []).push({ w: g.w, res: g.bs > g.as ? 'W' : g.bs < g.as ? 'L' : 'T', ms: g.bs, os: g.as }); }
+  const opps = Object.keys(ap.vs).sort((a, b) => pct(ap.vs[b]) - pct(ap.vs[a]) || a.localeCompare(b));
+  const wkCell = k => `<span class="apd ap-${k}" title="${k === 'w' ? 'Win' : k === 'l' ? 'Loss' : 'Tie'}"></span>`;
+  $('#ap-body').innerHTML = `
+    <div class="card ap-sum">
+      <div><div class="eyebrow">${YR} · if ${esc(me)} played everyone every week</div>
+        <div class="ap-big num">${recStr(ap.tot)}</div>
+        <div class="status">${ord(rank)} of ${TEAMS.length} in the league${S.games && T[me] ? ` · actual record ${recStr(T[me])}` : ''}</div></div>
+      <div class="ap-weeks">${ap.weeks.map(w => `<div class="apw" style="--p:${(w.w + w.t / 2) / (w.w + w.l + w.t)}"><span class="eyebrow">Wk ${w.week}</span><b class="num">${w.w}-${w.l}${w.t ? '-' + w.t : ''}</b><small class="num">${fmt(w.score)}</small></div>`).join('')}</div>
+    </div>
+    <p class="swipe" style="margin-top:14px">Swipe for more →</p>
+    <div class="tw" style="margin-top:14px"><table><thead><tr><th class="l">Opponent</th><th>Every-week record</th><th>Win %</th><th class="l">Week by week</th><th class="l">Actual game${S.games ? '' : 's'}</th></tr></thead><tbody>` +
+    opps.map(o => { const r = ap.vs[o], a = actual[o] || [];
+      return `<tr><td class="team">${esc(o)}</td><td class="num wl">${recStr(r)}</td><td class="num">${Math.round(pct(r) * 100)}%</td><td class="l"><span class="apdots">${r.weeks.map(wkCell).join('')}</span></td><td class="l num">${a.length ? a.map(g => `${g.res} ${fmt(g.ms)}–${fmt(g.os)} (Wk ${g.w})`).join(' · ') : (nextVs(me, o) ? `<span class="status">Plays Wk ${nextVs(me, o)}</span>` : '<span class="status">Haven\'t played yet</span>')}</td></tr>`; }).join('') +
+    `</tbody></table></div>`;
 }
 
 /* ---------------- ESPN data → site model ---------------- */
